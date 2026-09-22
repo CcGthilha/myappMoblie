@@ -39,6 +39,9 @@ dependencies:
   sqflite: ^2.3.0
   path: ^1.9.0
 
+  # Added for HW3: HTTP client for connecting to online APIs
+  http: ^1.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
