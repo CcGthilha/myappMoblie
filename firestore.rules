@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /restaurants/{docId} {
+      // อ่านได้เฉพาะเอกสารของตัวเอง
+      allow read: if request.auth != null
+                  && resource.data.userId == request.auth.uid;
+
+      // สร้างได้ เมื่อ userId ในเอกสาร = uid ของคนที่ล็อกอิน
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid;
+
+      // แก้ไขได้เฉพาะของตัวเอง และห้ามเปลี่ยนเจ้าของ
+      allow update: if request.auth != null
+                    && resource.data.userId == request.auth.uid
+                    && request.resource.data.userId == request.auth.uid;
+
+      // ลบได้เฉพาะของตัวเอง
+      allow delete: if request.auth != null
+                    && resource.data.userId == request.auth.uid;
+    }
+
+    // ปิดทุกอย่างที่ไม่ได้ระบุ
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
